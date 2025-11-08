@@ -15,6 +15,6 @@ MonoBehaviour:
   enemyName: Ooze_Round3
   maxHealth: 22
   attack: 5
-  defense: 5
+  defense: 2
   luck: 0
   power: 3

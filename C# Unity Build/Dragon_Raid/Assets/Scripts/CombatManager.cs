@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using TMPro;
 
 
 public enum CombatState { START, PLAYERTURN, ENEMYTURN, WIN, LOSE }
@@ -29,12 +31,20 @@ public class CombatManager : MonoBehaviour
     [Header("Prefabs & Spawns")]
     public GameObject playerPrefab;
     public Transform playerSpawnPoint;
-    public Transform[] enemySpawnPoints; 
+    public Transform[] enemySpawnPoints;
 
     [Header("Damage Formula Tuning")]
-  
+
     public float randMinMultiplier = 1f;
     public float randMaxMultiplier = 1f;
+
+    [Header("Targeting")]
+    public GameObject targetIndicatorPrefab;
+    public Vector3 targetOffset = new Vector3(0, 2.0f, 0);
+
+    private GameObject targetIndicatorInstance;
+    private int currentTargetIndex = 0;
+
 
     // (ATK * atkPotency) / (DEF * defDivisor)
     public float attackPotency = 1f;
@@ -50,13 +60,19 @@ public class CombatManager : MonoBehaviour
 
     public float lucktoCrit = 0.5f; // Chance to crit per LCK point
     public float critDamageMultiplier = 1.5f; // Crit damage multiplier
-    
+
     [Header("Round Control")]
-    public Round[] allRounds; 
-    private int currentRoundIndex = 0; 
-    
+    public Round[] allRounds;
+    private int currentRoundIndex = 0;
+
     [Header("Combat Tuning")]
     public int apRegenPerTurn = 15; // AP to give player each turn
+
+    [Header("UI & Bar Settings")]
+    public TextMeshProUGUI enemyHealthText; 
+    public int barLength = 10;
+    public char fillChar = '█';
+    public char emptyChar = '░';
 
     // These are set at runtime
     private List<EnemyAI> activeEnemies = new List<EnemyAI>();
@@ -70,24 +86,47 @@ public class CombatManager : MonoBehaviour
         // Use a Coroutine to set up the battle with delays
         StartCoroutine(SetupBattle());
     }
-    
+
+    void Update()
+    {
+        if (state == CombatState.PLAYERTURN)
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                HandleClick();
+            }
+        }
+
+        // press F9 to kill all enemies in the current round
+        if (Keyboard.current != null && Keyboard.current.f9Key.wasPressedThisFrame)
+        {
+            KillAllEnemiesInCurrentRound();
+        }
+    }
+
     /**
      * Spawns the player, gives them references, and starts Round 1.
      */
     IEnumerator SetupBattle()
     {
         state = CombatState.START;
-        
+
         GameObject playerGO = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
-        
+
         player = playerGO.GetComponent<PlayerController>();
 
         player.combatManager = this;
-        
+
         player.SetActionPanel(false);
 
-        yield return null; 
-        
+        if (enemyHealthText != null)
+            enemyHealthText.text = "";
+
+        targetIndicatorInstance = Instantiate(targetIndicatorPrefab);
+        targetIndicatorInstance.SetActive(false);
+
+        yield return null;
+
         // Start the first round
         StartRound(currentRoundIndex);
     }
@@ -99,7 +138,7 @@ public class CombatManager : MonoBehaviour
     {
         activeEnemies.Clear();
         Round round = allRounds[roundIndex];
-        
+
         // Loop through all enemies defined for this round
         for (int i = 0; i < round.enemiesInThisRound.Length; i++)
         {
@@ -107,28 +146,28 @@ public class CombatManager : MonoBehaviour
             if (i < enemySpawnPoints.Length)
             {
                 EnemySpawn spawnInfo = round.enemiesInThisRound[i];
-                
+
                 // 2. Spawn the correct prefab
                 GameObject newEnemyGO = Instantiate(spawnInfo.enemyPrefab, enemySpawnPoints[i].position, Quaternion.identity);
-                
+
                 // 3. Get its AI script
                 EnemyAI newEnemyAI = newEnemyGO.GetComponent<EnemyAI>();
-                
-                newEnemyAI.Setup(spawnInfo.enemyData, this, player); 
-                
+
+                newEnemyAI.Setup(spawnInfo.enemyData, this, player);
+
                 // 5. Add it to our list of active enemies
                 activeEnemies.Add(newEnemyAI);
             }
         }
-        
+
         Debug.Log("Starting " + round.roundName);
 
         // The round is set up, begin the player's turn
         state = CombatState.PLAYERTURN;
         PlayerTurnStart();
     }
-    
-    
+
+
     /**
      * Called at the beginning of the player's turn.
      * Regenerates AP and shows the action UI.
@@ -143,8 +182,15 @@ public class CombatManager : MonoBehaviour
         {
             player.currentAP = player.maxAP;
         }
+        player.UpdateUI();
         Debug.Log("Player AP regenerated to " + player.currentAP);
-       
+
+        currentTargetIndex = 0;
+        targetIndicatorInstance.SetActive(true);
+        UpdateTargetIndicator();
+
+        UpdateEnemyUI();
+
         player.SetActionPanel(true);
     }
 
@@ -156,15 +202,52 @@ public class CombatManager : MonoBehaviour
     {
         if (state != CombatState.PLAYERTURN) return; // Safety check
 
-        player.currentAP -= skill.apCost;
-        Debug.Log("Player used " + skill.skillName + ", AP remaining: " + player.currentAP);
-
-
-        EndPlayerTurn(); 
-
-        if (activeEnemies.Count > 0)
+        if (activeEnemies.Count > 0 && activeEnemies[currentTargetIndex] != null)
         {
-            StartCoroutine(PlayerAttackSequence(skill, attackerAttack, attackerLuck, activeEnemies[0]));
+            player.currentAP -= skill.apCost;
+            player.UpdateUI();
+            Debug.Log("Player used " + skill.skillName + ", AP remaining: " + player.currentAP);
+
+            EndPlayerTurn();
+
+            EnemyAI targetEnemy = activeEnemies[currentTargetIndex];
+            StartCoroutine(PlayerAttackSequence(skill, attackerAttack, attackerLuck, targetEnemy));
+
+        }
+        else
+        {
+            Debug.Log("No enemies to attack!");
+            return;
+        }
+    }
+
+    void HandleClick()
+    {
+        Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+
+        RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+
+        if (hit.collider != null)
+        {
+            EnemyAI clickedEnemy = hit.collider.GetComponent<EnemyAI>();
+            if (clickedEnemy != null)
+            {
+                SetTarget(clickedEnemy);
+            }
+        }
+    }
+
+    public void SetTarget(EnemyAI newTarget)
+    {
+        if (state != CombatState.PLAYERTURN) return; //These technically aren't needed but they stop bugs from happening from it not being the right turn
+
+        int newIndex = activeEnemies.IndexOf(newTarget);
+        if (newIndex != -1)
+        {
+            currentTargetIndex = newIndex;
+            UpdateTargetIndicator();
+            UpdateEnemyUI();
+            Debug.Log("Target changed to " + newTarget.baseStats.enemyName);
         }
     }
 
@@ -179,13 +262,13 @@ public class CombatManager : MonoBehaviour
             if (target != null) // Check if target is still alive
             {
                 Debug.Log("Hit " + (i + 1) + "!");
-                
+
                 // Calculate the final power for this one hit
                 int finalPower = (int)(skill.power * skill.damageMultiplier);
-                
+
                 // Tell the target to take damage
                 target.TakeDamage(attackerAttack, attackerLuck, finalPower);
-                
+
                 yield return new WaitForSeconds(0.2f); // Short pause between hits
             }
             else
@@ -193,7 +276,7 @@ public class CombatManager : MonoBehaviour
                 break; // Stop attacking if target died mid-combo
             }
         }
-        
+
         // After all hits, start the enemy's turn
         StartCoroutine(EnemyTurn());
     }
@@ -206,9 +289,98 @@ public class CombatManager : MonoBehaviour
     {
         state = CombatState.ENEMYTURN;
         Debug.Log("Ending player turn.");
+
+        if (enemyHealthText != null)
+            enemyHealthText.text = "";
+
+        targetIndicatorInstance.SetActive(false);
         player.SetActionPanel(false);
     }
+
+    public string GenerateBarString(string label, int current, int max)
+    {
+        if (max == 0) return $"{label}: ERROR";
+        current = Mathf.Clamp(current, 0, max);
+
+        float percent = (float)current / max;
+        int fillCount = Mathf.RoundToInt(percent * barLength);
+        int emptyCount = barLength - fillCount;
+
+        string fillString = new string(fillChar, fillCount);
+        string emptyString = new string(emptyChar, emptyCount);
+
+        return label + ": [" + fillString + emptyString + "]";
+
+    }
     
+    void UpdateEnemyUI()
+    {
+        if (enemyHealthText == null) return; // No UI to update
+
+        // Check if we have a valid target
+        if (activeEnemies.Count > 0 && currentTargetIndex < activeEnemies.Count && activeEnemies[currentTargetIndex] != null)
+        {
+            EnemyAI target = activeEnemies[currentTargetIndex];
+            enemyHealthText.text = GenerateBarString(target.baseStats.enemyName, target.currentHealth, target.baseStats.maxHealth);
+        }
+        else
+        {
+            // No target, clear the text
+            enemyHealthText.text = "";
+        }
+    }
+
+
+    public void CycleTarget()
+    {
+        if (state != CombatState.PLAYERTURN) return; // Only allow during player's turn
+
+        currentTargetIndex++;
+
+        if (currentTargetIndex >= activeEnemies.Count)
+        {
+            currentTargetIndex = 0; // Wrap around to first enemy
+        }
+
+        UpdateTargetIndicator();
+        UpdateEnemyUI();
+    }
+
+    // This is inside CombatManager.cs
+
+private void UpdateTargetIndicator()
+{
+    // Check if we have any valid targets
+    if (activeEnemies.Count == 0 || currentTargetIndex >= activeEnemies.Count || activeEnemies[currentTargetIndex] == null)
+    {
+        targetIndicatorInstance.SetActive(false);
+        return;
+    }
+    
+    // 1. Get the current target
+    EnemyAI target = activeEnemies[currentTargetIndex];
+    
+    Collider2D targetCollider = target.GetComponent<Collider2D>();
+
+    if (targetCollider == null)
+    {
+        // Failsafe: if no collider, just put it at their center (the old, buggy way)
+        Debug.LogWarning("Target has no Collider2D, indicator position may be wrong.");
+        targetIndicatorInstance.transform.position = target.transform.position + targetOffset;
+        return;
+    }
+
+    float topOfEnemy = targetCollider.bounds.max.y; // The highest Y-point of the collider
+    float centerOfEnemy = targetCollider.bounds.center.x; // The center X-point of the collider
+    
+    // 4. Set the indicator's position
+    // Place it at the top-center, plus our visual offset
+    targetIndicatorInstance.transform.position = new Vector3(
+        centerOfEnemy + targetOffset.x, 
+        topOfEnemy + targetOffset.y,
+        0
+    );
+}
     /**
      * Coroutine that loops through each living enemy and has them take their turn.
      */
@@ -339,5 +511,24 @@ public class CombatManager : MonoBehaviour
         Debug.Log("Get ready for the next round...");
         yield return new WaitForSeconds(2f);
         StartRound(currentRoundIndex);
+    }
+
+    // === Developer/Console utilities ===
+    // Immediately kill all enemies in the current round. Triggers normal round-complete flow.
+    public void KillAllEnemiesInCurrentRound()
+    {
+        if (activeEnemies == null || activeEnemies.Count == 0) return;
+
+        // Work on a copy as the list will be mutated by EnemyDied during Die()
+        List<EnemyAI> toKill = new List<EnemyAI>(activeEnemies);
+        foreach (var ai in toKill)
+        {
+            if (ai != null)
+            {
+                ai.ForceKill();
+            }
+        }
+
+        Debug.Log("[Dev] KillAllEnemiesInCurrentRound executed.");
     }
 }

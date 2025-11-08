@@ -22,11 +22,6 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI healthText; 
     public TextMeshProUGUI apText;     
 
-    // Bar Style Settings
-    [Header("ASCII Bar Settings")]
-    public int barLength = 10;      // How many characters wide the bar is
-    public char fillChar = '█';     // A solid block
-    public char emptyChar = '░';    // A light shaded block
 
     void Start()
     {
@@ -43,7 +38,7 @@ public class PlayerController : MonoBehaviour
     public void UpdateUI()
     {
         // Update the Health Bar
-        if (healthText != null)
+        if (healthText != null && combatManager != null)
         {
             healthText.text = GenerateBarString("HP", currentHealth, maxHealth);
         }
@@ -55,9 +50,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-   
-    private string GenerateBarString(string label, int current, int max)
+
+    public string GenerateBarString(string label, int current, int max)
     {
+        int barLength = 10;
+        char fillChar = '█';
+        char emptyChar = '░';
+
         // Safety check to prevent divide-by-zero
         if (max == 0) return $"{label}: ERROR";
 
@@ -69,7 +68,7 @@ public class PlayerController : MonoBehaviour
         int fillCount = Mathf.RoundToInt(percent * barLength);
         int emptyCount = barLength - fillCount;
 
-        // Build the string
+        // Build the strings
         string fillString = new string(fillChar, fillCount);
         string emptyString = new string(emptyChar, emptyCount);
 
@@ -95,15 +94,61 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnCycleTarget()
+    {
+        if (combatManager != null && combatManager.state == CombatState.PLAYERTURN)
+        {
+            combatManager.CycleTarget();
+        }
+    }
+
     public void TakeDamage(int attackerAttack, int attackerLuck, int attackerPower)
     {
-        
-        int finalDamage = 1; // Default to minimum damage
+        float randMin = combatManager.randMinMultiplier;
+        float randMax = combatManager.randMaxMultiplier;
+        float atkPotency = combatManager.attackPotency;
+        float defDivisor = combatManager.defenseDivisor;
+        float defPotency = combatManager.defensePotency;
+        float defPenalty = combatManager.defensePenaltyMultiplier;
+        float defScalar = combatManager.defensePenaltyScalar;
+        float defToggle = combatManager.defensePenaltyToggle;
+        float flatBonus = combatManager.flatDamageBonus;
 
+        float critChancePerLuck = combatManager.lucktoCrit;
+        float critMultiplier = combatManager.critDamageMultiplier;
+
+        // Formula Breakdown:
+        float ATK = attackerAttack;
+        float PWR = attackerPower;
+        float DEF = this.defense; 
+
+        float randValue = Random.Range(randMin * PWR, randMax * PWR);
+
+        if (defDivisor == 0) defDivisor = 1f;
+        
+        float mainMultiplier = (ATK * atkPotency) / (DEF * defDivisor);
+        float penalty = (DEF * defPotency * defPenalty) * defScalar * defToggle;
+
+        int baseDamage = Mathf.FloorToInt(randValue * (mainMultiplier - penalty) + flatBonus);
+
+        float critChance = attackerLuck * critChancePerLuck;
+        float critRoll = Random.Range(0f, 100f);
+
+        int finalDamage;
+        if (critRoll < critChance)
+        {
+            finalDamage = (int)(Mathf.FloorToInt(baseDamage * critMultiplier));
+            Debug.Log("Critical Hit!");
+        }
+        else
+        {
+            finalDamage = baseDamage;
+        }
+        
+        if (finalDamage < 1) finalDamage = 1;
+    
         currentHealth -= finalDamage;
         Debug.Log("Player takes " + finalDamage + " damage!");
-        
-        UpdateUI(); // Update the UI after taking damage
 
         if (currentHealth <= 0)
         {

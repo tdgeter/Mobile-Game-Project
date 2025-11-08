@@ -1014,18 +1014,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   actionCanvas: {fileID: 5755939551283382201}
   combatManager: {fileID: 0}
-  maxHealth: 50
+  maxHealth: 100
   currentHealth: 0
-  maxAP: 50
+  maxAP: 60
   currentAP: 0
-  attack: 1
+  attack: 2
   defense: 2
   luck: 2
   healthText: {fileID: 2039057011945696872}
   apText: {fileID: 1062278339088805795}
-  barLength: 10
-  fillChar: 9608
-  emptyChar: 9617
 --- !u!1 &7392668367090760420
 GameObject:
   m_ObjectHideFlags: 0

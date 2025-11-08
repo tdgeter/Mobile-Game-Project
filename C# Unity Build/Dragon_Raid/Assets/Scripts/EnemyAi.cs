@@ -1,28 +1,49 @@
 using UnityEngine;
+using TMPro;
+using Unity.VisualScripting;
+
 
 public class EnemyAI : MonoBehaviour
 {
-    public EnemyData baseStats; 
+    public EnemyData baseStats;
     public int currentHealth;
     public int currentAttack;
     public int currentDefense;
     public int currentLuck;
     public int currentPower; // Enemy basic attack power
-    
+
     public CombatManager combatManager;
-    private PlayerController playerTarget; 
+    private PlayerController playerTarget;
+
+    [Header("UI")]
+    public TextMeshProUGUI healthText; // Drag your new text object here
+    
+    public int barLength = 10;
+    public char fillChar = '█';
+    public char emptyChar = '░';
+    // -------------------------
 
     public void Setup(EnemyData data, CombatManager manager, PlayerController player)
     {
         baseStats = data;
         combatManager = manager;
-        playerTarget = player; 
-        
+        playerTarget = player;
+
         currentHealth = baseStats.maxHealth;
         currentAttack = baseStats.attack;
         currentDefense = baseStats.defense;
         currentLuck = baseStats.luck;
-        currentPower = baseStats.power; 
+        currentPower = baseStats.power;
+
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
+        if (playerTarget != null && healthText != null && combatManager != null)
+        {
+            healthText.text = combatManager.GenerateBarString(baseStats.enemyName,currentHealth, baseStats.maxHealth);
+        }
     }
 
     // This is the enemy's basic attack
@@ -31,15 +52,17 @@ public class EnemyAI : MonoBehaviour
         if (playerTarget != null)
         {
             Debug.Log(baseStats.enemyName + " attacks the player!");
-            
+
+
+
             // The enemy just uses its basic stats for its turn
             playerTarget.TakeDamage(currentAttack, currentLuck, currentPower);
         }
     }
-    
+
     public void TakeDamage(int attackerAttack, int attackerLuck, int attackerPower)
     {
-        
+
         float randMin = combatManager.randMinMultiplier;
         float randMax = combatManager.randMaxMultiplier;
         float atkPotency = combatManager.attackPotency;
@@ -52,7 +75,7 @@ public class EnemyAI : MonoBehaviour
 
         float critChancePerLuck = combatManager.lucktoCrit;
         float critMultiplier = combatManager.critDamageMultiplier;
-        
+
 
         // Formula stats
         float ATK = attackerAttack;
@@ -62,7 +85,7 @@ public class EnemyAI : MonoBehaviour
         float randValue = Random.Range(randMin * PWR, randMax * PWR);
 
         if (defDivisor == 0) defDivisor = 1f;
-        
+
         float mainMultiplier = (ATK * atkPotency) / (DEF * defDivisor);
         float penalty = (DEF * defPotency * defPenalty) * defScalar * defToggle;
 
@@ -86,15 +109,28 @@ public class EnemyAI : MonoBehaviour
         currentHealth -= finalDamage;
         Debug.Log(baseStats.enemyName + " takes " + finalDamage + " damage.");
 
+        UpdateUI();
+
         if (currentHealth <= 0)
         {
             Die();
         }
+
+
     }
+
+
 
     void Die()
     {
         combatManager.EnemyDied(this.gameObject);
         Destroy(this.gameObject);
+    }
+
+    // console command to immediately kill this enemy
+    public void ForceKill()
+    {
+        currentHealth = 0;
+        Die();
     }
 }
