@@ -118,6 +118,7 @@ public class CombatManager : MonoBehaviour
         player.combatManager = this;
 
         player.SetActionPanel(false);
+        player.SetSkillPanel(false);
 
         if (enemyHealthText != null)
             enemyHealthText.text = "";
@@ -192,6 +193,8 @@ public class CombatManager : MonoBehaviour
         UpdateEnemyUI();
 
         player.SetActionPanel(true);
+        player.SetSkillPanel(false);
+
     }
 
     /**
@@ -295,6 +298,7 @@ public class CombatManager : MonoBehaviour
 
         targetIndicatorInstance.SetActive(false);
         player.SetActionPanel(false);
+        player.SetSkillPanel(false);
     }
 
     public string GenerateBarString(string label, int current, int max)

@@ -5,6 +5,7 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     public GameObject actionCanvas;
+    public GameObject skillCanvas;
     
     [HideInInspector]
     public CombatManager combatManager; 
@@ -86,6 +87,7 @@ public class PlayerController : MonoBehaviour
             if (currentAP >= skill.apCost)
             {
                 combatManager.OnPlayerSkill(skill, attack, luck);
+                currentAP -= skill.apCost;
             }
             else
             {
@@ -165,5 +167,10 @@ public class PlayerController : MonoBehaviour
     public void SetActionPanel(bool show)
     {
         if (actionCanvas != null) actionCanvas.SetActive(show);
+    }
+
+    public void SetSkillPanel(bool show)
+    {
+        if (skillCanvas != null) skillCanvas.SetActive(show);
     }
 }
