@@ -1568,6 +1568,7 @@ GameObject:
   - component: {fileID: 2522024715623474428}
   - component: {fileID: 4235460063282960863}
   - component: {fileID: 1314287461780896709}
+  - component: {fileID: 7389489591808166996}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1675,6 +1676,23 @@ MonoBehaviour:
   luck: 2
   healthText: {fileID: 2039057011945696872}
   apText: {fileID: 1062278339088805795}
+--- !u!114 &7389489591808166996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6482744381270665753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eedb8bf407684e4d88d53e68838ab94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AsciiAnimator
+  characterTextField: {fileID: 0}
+  idleArt: 
+  timePerFrame: 0.1
+  windUpArt: 
+  swingArt: 
 --- !u!1 &7392668367090760420
 GameObject:
   m_ObjectHideFlags: 0
