@@ -205,23 +205,39 @@ public class CombatManager : MonoBehaviour
     {
         if (state != CombatState.PLAYERTURN) return; // Safety check
 
-        if (activeEnemies.Count > 0 && activeEnemies[currentTargetIndex] != null)
+        switch (skill.skillName) //Add switch statement incase there are any skills that do not require PlayerAttackSequence
+
         {
-            player.currentAP -= skill.apCost;
-            player.UpdateUI();
-            Debug.Log("Player used " + skill.skillName + ", AP remaining: " + player.currentAP);
+            case "Heal":
 
-            EndPlayerTurn();
+                player.currentHealth += player.maxHealth / 4; // heal for 25% of max
+                Debug.Log("Player Heals to: " + player.currentHealth);
+                player.currentAP -= skill.apCost;
 
-            EnemyAI targetEnemy = activeEnemies[currentTargetIndex];
-            StartCoroutine(PlayerAttackSequence(skill, attackerAttack, attackerLuck, targetEnemy));
+                break;
 
+            default:
+                if (activeEnemies.Count > 0 && activeEnemies[currentTargetIndex] != null)
+                {
+                    player.currentAP -= skill.apCost;
+                    player.UpdateUI();
+                    Debug.Log("Player used " + skill.skillName + ", AP remaining: " + player.currentAP);
+
+                    EnemyAI targetEnemy = activeEnemies[currentTargetIndex];
+                    StartCoroutine(PlayerAttackSequence(skill, attackerAttack, attackerLuck, targetEnemy));
+
+                }
+                else
+                {
+                    Debug.Log("No enemies to attack!");
+                    return;
+                }
+                break;
         }
-        else
-        {
-            Debug.Log("No enemies to attack!");
-            return;
-        }
+
+        // After skill use, end turn and start enemy turn. 
+        EndPlayerTurn();
+        StartCoroutine(EnemyTurn());
     }
 
     void HandleClick()
@@ -279,9 +295,6 @@ public class CombatManager : MonoBehaviour
                 break; // Stop attacking if target died mid-combo
             }
         }
-
-        // After all hits, start the enemy's turn
-        StartCoroutine(EnemyTurn());
     }
 
     /**
