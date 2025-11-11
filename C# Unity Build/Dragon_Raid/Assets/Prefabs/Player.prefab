@@ -1449,7 +1449,7 @@ GameObject:
   - component: {fileID: 2793598657262793899}
   - component: {fileID: 8767379285730546018}
   m_Layer: 6
-  m_Name: Skills (2)
+  m_Name: Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1556,7 +1556,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2793598657262793899}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1314287461780896709}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: UseSkill
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 482f5f636cdcfad419ceca7cba3509d8, type: 2}
+          m_ObjectArgumentAssemblyTypeName: SkillData, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6482744381270665753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1568,7 +1580,6 @@ GameObject:
   - component: {fileID: 2522024715623474428}
   - component: {fileID: 4235460063282960863}
   - component: {fileID: 1314287461780896709}
-  - component: {fileID: 7389489591808166996}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1676,23 +1687,6 @@ MonoBehaviour:
   luck: 2
   healthText: {fileID: 2039057011945696872}
   apText: {fileID: 1062278339088805795}
---- !u!114 &7389489591808166996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6482744381270665753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eedb8bf407684e4d88d53e68838ab94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AsciiAnimator
-  characterTextField: {fileID: 0}
-  idleArt: 
-  timePerFrame: 0.1
-  windUpArt: 
-  swingArt: 
 --- !u!1 &7392668367090760420
 GameObject:
   m_ObjectHideFlags: 0

@@ -87,7 +87,6 @@ public class PlayerController : MonoBehaviour
             if (currentAP >= skill.apCost)
             {
                 combatManager.OnPlayerSkill(skill, attack, luck);
-                currentAP -= skill.apCost;
             }
             else
             {
