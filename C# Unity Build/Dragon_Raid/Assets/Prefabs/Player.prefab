@@ -302,7 +302,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0.0000029579, y: -12.2}
+  m_AnchoredPosition: {x: 0.0000029578805, y: -12.2}
   m_SizeDelta: {x: 23.048, y: 10.827}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4522085225187275784
@@ -617,8 +617,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -1.92, y: -1.13}
-  m_SizeDelta: {x: 26.3436, y: 37.1299}
+  m_AnchoredPosition: {x: -1.848, y: -1.144}
+  m_SizeDelta: {x: 27.5844, y: 37.1299}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1288522455203553528
 Canvas:
@@ -994,7 +994,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.1, y: 0}
+  m_AnchoredPosition: {x: 0.688, y: 0}
   m_SizeDelta: {x: 21.672, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3502761710711364162
@@ -1025,11 +1025,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\r\n\r\n  /$$$$$$  /$$       /$$ /$$ /$$          \r\n /$$__  $$| $$     
-    |__/| $$| $$          \r\n| $$  \\__/| $$   /$$ /$$| $$| $$  /$$$$$$$\r\n|  $$$$$$
-    | $$  /$$/| $$| $$| $$ /$$_____/\r\n \\____  $$| $$$$$$/ | $$| $$| $$|  $$$$$$
-    \r\n /$$  \\ $$| $$_  $$ | $$| $$| $$ \\____  $$\r\n|  $$$$$$/| $$ \\  $$| $$|
-    $$| $$ /$$$$$$$/\r\n \\______/ |__/  \\__/|__/|__/|__/|_______/ \r\n\r\n"
+  m_text: "\r\n\r\n /$$   /$$                     /$$\r\n| $$  | $$                   
+    | $$\r\n| $$  | $$  /$$$$$$   /$$$$$$ | $$\r\n| $$$$$$$$ /$$__  $$ |____  $$|
+    $$\r\n| $$__  $$| $$$$$$$$  /$$$$$$$| $$\r\n| $$  | $$| $$_____/ /$$__  $$| $$\r\n|
+    $$  | $$|  $$$$$$$|  $$$$$$$| $$\r\n|__/  |__/ \\_______/ \\_______/|__/\r\n                                 
+    \r\n                                  \r\n                                  
+    \r\n\r\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6f83e085ae34ce242b84a8175d49ae08, type: 2}
   m_sharedMaterial: {fileID: 6738878399344335022, guid: 6f83e085ae34ce242b84a8175d49ae08, type: 2}
@@ -1224,7 +1225,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.1, y: 0}
+  m_AnchoredPosition: {x: 1.3, y: 0}
   m_SizeDelta: {x: 21.672, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1757959195763515047
@@ -1255,11 +1256,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\r\n\r\n  /$$$$$$  /$$       /$$ /$$ /$$          \r\n /$$__  $$| $$     
-    |__/| $$| $$          \r\n| $$  \\__/| $$   /$$ /$$| $$| $$  /$$$$$$$\r\n|  $$$$$$
-    | $$  /$$/| $$| $$| $$ /$$_____/\r\n \\____  $$| $$$$$$/ | $$| $$| $$|  $$$$$$
-    \r\n /$$  \\ $$| $$_  $$ | $$| $$| $$ \\____  $$\r\n|  $$$$$$/| $$ \\  $$| $$|
-    $$| $$ /$$$$$$$/\r\n \\______/ |__/  \\__/|__/|__/|__/|_______/ \r\n\r\n"
+  m_text: " /$$   /$$                                         \r\n| $$  | $$                                        
+    \r\n| $$  | $$  /$$$$$$   /$$$$$$  /$$    /$$ /$$   /$$\r\n| $$$$$$$$ /$$__ 
+    $$ |____  $$|  $$  /$$/| $$  | $$\r\n| $$__  $$| $$$$$$$$  /$$$$$$$ \\  $$/$$/
+    | $$  | $$\r\n| $$  | $$| $$_____/ /$$__  $$  \\  $$$/  | $$  | $$\r\n| $$  |
+    $$|  $$$$$$$|  $$$$$$$   \\  $/   |  $$$$$$$\r\n|__/  |__/ \\_______/ \\_______/   
+    \\_/     \\____  $$\r\n                                          /$$  | $$\r\n                                        
+    |  $$$$$$/\r\n                                          \\______/ "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6f83e085ae34ce242b84a8175d49ae08, type: 2}
   m_sharedMaterial: {fileID: 6738878399344335022, guid: 6f83e085ae34ce242b84a8175d49ae08, type: 2}
@@ -2002,7 +2005,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.1, y: 0}
+  m_AnchoredPosition: {x: 0.688, y: 0}
   m_SizeDelta: {x: 21.672, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3718517715645138740
@@ -2033,11 +2036,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\r\n\r\n  /$$$$$$  /$$       /$$ /$$ /$$          \r\n /$$__  $$| $$     
-    |__/| $$| $$          \r\n| $$  \\__/| $$   /$$ /$$| $$| $$  /$$$$$$$\r\n|  $$$$$$
-    | $$  /$$/| $$| $$| $$ /$$_____/\r\n \\____  $$| $$$$$$/ | $$| $$| $$|  $$$$$$
-    \r\n /$$  \\ $$| $$_  $$ | $$| $$| $$ \\____  $$\r\n|  $$$$$$/| $$ \\  $$| $$|
-    $$| $$ /$$$$$$$/\r\n \\______/ |__/  \\__/|__/|__/|__/|_______/ \r\n\r\n"
+  m_text: " /$$$$$$$$        /$$           /$$          \r\n|__  $$__/       |__/         
+    | $$          \r\n   | $$  /$$$$$$  /$$  /$$$$$$ | $$  /$$$$$$ \r\n   | $$ /$$__ 
+    $$| $$ /$$__  $$| $$ /$$__  $$\r\n   | $$| $$  \\__/| $$| $$  \\ $$| $$| $$$$$$$$\r\n  
+    | $$| $$      | $$| $$  | $$| $$| $$_____/\r\n   | $$| $$      | $$| $$$$$$$/|
+    $$|  $$$$$$$\r\n   |__/|__/      |__/| $$____/ |__/ \\_______/\r\n                    
+    | $$                    \r\n                     | $$                    \r\n                    
+    |__/                    "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6f83e085ae34ce242b84a8175d49ae08, type: 2}
   m_sharedMaterial: {fileID: 6738878399344335022, guid: 6f83e085ae34ce242b84a8175d49ae08, type: 2}
@@ -2407,7 +2412,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0.087, y: -0.009000778}
+  m_AnchoredPosition: {x: 0.0000029579, y: 0}
   m_SizeDelta: {x: 23.048, y: 10.827}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &6340295601475603071
