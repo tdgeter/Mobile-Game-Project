@@ -21,8 +21,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("UI References")]
     public TextMeshProUGUI healthText; 
-    public TextMeshProUGUI apText;     
-
+    public TextMeshProUGUI apText;
 
     void Start()
     {

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 749ffaad65730194ca51f529452c21c0, type: 3}
   m_Name: Heavy
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: Smash
+  skillName: Heavy Attack
   power: 25
   hitCount: 1
   damageMultiplier: 1

@@ -1690,6 +1690,7 @@ MonoBehaviour:
   luck: 2
   healthText: {fileID: 2039057011945696872}
   apText: {fileID: 1062278339088805795}
+  attackAnimator: {fileID: 7534269954609303301, guid: 418f05f8044282e4c9f425c3be4f5b09, type: 3}
 --- !u!1 &7392668367090760420
 GameObject:
   m_ObjectHideFlags: 0

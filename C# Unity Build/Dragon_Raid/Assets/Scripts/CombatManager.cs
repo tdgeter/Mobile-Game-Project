@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using TMPro;
+using Unity.VisualScripting;
 
 
 public enum CombatState { START, PLAYERTURN, ENEMYTURN, WIN, LOSE }
@@ -45,6 +46,9 @@ public class CombatManager : MonoBehaviour
     private GameObject targetIndicatorInstance;
     private int currentTargetIndex = 0;
 
+    [Header("Attack Animator")]
+    public GameObject animatorPrefab;
+    private GameObject animatorInstance;
 
     // (ATK * atkPotency) / (DEF * defDivisor)
     public float attackPotency = 1f;
@@ -73,10 +77,12 @@ public class CombatManager : MonoBehaviour
     public int barLength = 10;
     public char fillChar = '█';
     public char emptyChar = '░';
-
+    
     // These are set at runtime
     private List<EnemyAI> activeEnemies = new List<EnemyAI>();
     private PlayerController player;
+
+  
 
     /**
      * Called when the scene starts. Begins the battle setup.
@@ -275,6 +281,15 @@ public class CombatManager : MonoBehaviour
      */
     IEnumerator PlayerAttackSequence(SkillData skill, int attackerAttack, int attackerLuck, EnemyAI target)
     {
+       //This can all probably be refactored into its own function call.
+        GameObject animatorInstance = Instantiate(animatorPrefab, target.transform.position, Quaternion.identity); //Create instance of animation object at target location
+
+        Animator attackAnimator = animatorInstance.GetComponent<Animator>(); //get animation componment from animator object
+
+        attackAnimator.SetTrigger(skill.name); //Skill name should have the same name as the trigger in the animator. This allows different animations per skill call ( I think!)
+        yield return new WaitForSeconds(2.0f); // Short pause to allow animation to play
+        Destroy(animatorInstance); 
+
         // Loop for each hit in the skill
         for (int i = 0; i < skill.hitCount; i++)
         {

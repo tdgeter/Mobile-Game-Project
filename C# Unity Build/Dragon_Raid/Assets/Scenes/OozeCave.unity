@@ -771,6 +771,7 @@ MonoBehaviour:
   randMaxMultiplier: 1
   targetIndicatorPrefab: {fileID: 327623207934607488, guid: 0859c0bcdfa7cf942a70c45ad6af9de6, type: 3}
   targetOffset: {x: 0, y: 1, z: 0}
+  animatorPrefab: {fileID: 327623207934607488, guid: 418f05f8044282e4c9f425c3be4f5b09, type: 3}
   attackPotency: 1
   defenseDivisor: 1
   defensePotency: 0.5
