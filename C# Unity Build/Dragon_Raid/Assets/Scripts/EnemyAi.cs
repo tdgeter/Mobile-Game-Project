@@ -16,7 +16,7 @@ public class EnemyAI : MonoBehaviour
     private PlayerController playerTarget;
 
     [Header("UI")]
-    public TextMeshProUGUI healthText; // Drag your new text object here
+    public TextMeshProUGUI healthText;
     
     public int barLength = 10;
     public char fillChar = '█';

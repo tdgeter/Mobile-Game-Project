@@ -139,7 +139,7 @@ public class CombatManager : MonoBehaviour
     }
 
     /**
-     * Spawns all enemies for a given round based on the 'allRounds' array.
+     * Spawns all enemies for a given round.
      */
     void StartRound(int roundIndex)
     {
