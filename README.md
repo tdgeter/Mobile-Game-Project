@@ -5,7 +5,8 @@ Builds and Runs on Emulator with working Quit button:
 
 No permissions required(for now)
 
-<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/629caa7a-6f40-4bb3-8eba-c905569cbf78" />]
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5a45b70a-3798-41e3-ad54-66836ca22e2a" />
+
 
 Attacking and damage handles without crashing
 
@@ -14,4 +15,6 @@ User data does not persist as it's handled on a run by run basis.
 UI does not freeze
 
 This app does not collect user data.
+
+Screen auto sizes depending on screen size.
 
