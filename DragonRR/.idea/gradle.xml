@@ -4,7 +4,12 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/DragonRR" />
-        <option name="gradleJvm" value="21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/DragonRR" />
+            <option value="$PROJECT_DIR$/DragonRR/deps" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>
