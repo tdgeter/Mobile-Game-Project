@@ -1,8 +1,7 @@
 package com.yourgame.ui
-import com.soywiz.korge.scene.Scene
-import com.soywiz.korge.view.*
-import com.soywiz.korge.view.ui.button
-import com.soywiz.kmmuix.ui.text.Text
+import korlibs.korge.scene.Scene
+import korlibs.korge.view.*
+import korlibs.korge.ui.*
 
 class MenuManager(private val container: SContainer) {
 

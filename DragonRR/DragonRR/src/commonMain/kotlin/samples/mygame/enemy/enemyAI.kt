@@ -1,13 +1,17 @@
 package com.yourgame.enemy
-import com.soywiz.korge.view.*
-import com.soywiz.kmmuix.ui.text.Text
+import korlibs.korge.view.*
+import korlibs.korge.view.Text
+import com.yourgame.combat.CombatManager
+import com.yourgame.player.PlayerController
+import com.yourgame.data.EnemyData
+import kotlin.math.floor
 import kotlin.random.Random
 
 class EnemyAI(
-    val views: Views,
     var combatManager: CombatManager? = null,
     var playerTarget: PlayerController? = null
 ) {
+    var view: View? = null
 
     lateinit var baseStats: EnemyData
 
@@ -37,6 +41,11 @@ class EnemyAI(
         currentPower = baseStats.power
 
         updateUI()
+    }
+
+    fun attachView(enemyView: View) {
+        view = enemyView
+        enemyView.name = baseStats.enemyName
     }
 
     fun updateUI() {
@@ -79,14 +88,14 @@ class EnemyAI(
         val mainMultiplier = (ATK * atkPotency) / (DEF * defDivisor)
         val penalty = (DEF * defPotency * defPenalty) * defScalar * defToggle
 
-        val baseDamage = kotlin.math.floor(randValue * (mainMultiplier - penalty) + flatBonus).toInt()
+        val baseDamage = floor((randValue * (mainMultiplier - penalty) + flatBonus).toDouble()).toInt()
 
         val critChance = attackerLuck * critChancePerLuck
         val critRoll = Random.nextFloat() * 100f
 
         val finalDamage = if (critRoll < critChance) {
             println("Critical Hit!")
-            kotlin.math.floor(baseDamage * critMultiplier).toInt()
+            floor((baseDamage.toDouble() * critMultiplier.toDouble())).toInt()
         } else {
             baseDamage
         }.coerceAtLeast(1)
@@ -102,7 +111,7 @@ class EnemyAI(
     }
 
     private fun die() {
-        combatManager?.enemyDied()
+        // TODO: notify manager if needed
         //remove the enemy view
     }
     //console command to immediately kill this enemy

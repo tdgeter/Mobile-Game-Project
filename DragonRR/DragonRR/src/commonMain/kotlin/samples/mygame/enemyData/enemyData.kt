@@ -7,5 +7,6 @@ data class EnemyData(
     val attack: Int = 0,  // (ATK)
     val defense: Int = 0, // (DEF)
     val luck: Int = 0,    // (LCK)
-    val power: Int = 0    // (PWR)
+    val power: Int = 0,
+    val spritePath: String = ""
 )

@@ -1,14 +1,19 @@
 package com.yourgame.player
-import com.soywiz.korge.view.*
-import com.soywiz.kmmuix.ui.text.Text
-import com.soywiz.korge.scene.Scene
+import korlibs.korge.view.*
+import korlibs.korge.scene.Scene
+import korlibs.korge.view.Text
+import com.yourgame.combat.CombatManager
+import com.yourgame.combat.CombatState
+import com.yourgame.data.SkillData
+import kotlin.math.floor
+import kotlin.math.min
+import kotlin.math.round
 import kotlin.random.Random
 
 /**
  *player controller class for korGE
  */
 class PlayerController(
-    val views: Views,  //korGE Views context
     var combatManager: CombatManager? = null  //will be set from scene
 ) {
 
@@ -47,11 +52,11 @@ class PlayerController(
         if (max == 0) return "$label: ERROR"
 
         //clamp current value just in case
-        val clampedCurrent = kotlin.math.minOf(current, max).coerceAtLeast(0)
+        val clampedCurrent = min(current, max).coerceAtLeast(0)
 
         //calculate the percentage and fill amount
         val percent = clampedCurrent.toFloat() / max
-        val fillCount = kotlin.math.roundToInt(percent * barLength)
+        val fillCount = round(percent * barLength).toInt()
         val emptyCount = barLength - fillCount
 
         //build the strings
@@ -105,14 +110,14 @@ class PlayerController(
         val mainMultiplier = (ATK * atkPotency) / (DEF * defDivisor)
         val penalty = (DEF * defPotency * defPenalty) * defScalar * defToggle
 
-        val baseDamage = kotlin.math.floor(randValue * (mainMultiplier - penalty) + flatBonus).toInt()
+        val baseDamage = floor((randValue * (mainMultiplier - penalty) + flatBonus).toDouble()).toInt()
 
         val critChance = attackerLuck * critChancePerLuck
         val critRoll = Random.nextFloat() * 100f
 
         val finalDamage = if (critRoll < critChance) {
             println("Critical Hit!")
-            kotlin.math.floor(baseDamage * critMultiplier).toInt()
+            floor((baseDamage.toDouble() * critMultiplier.toDouble())).toInt()
         } else {
             baseDamage
         }.coerceAtLeast(1)
