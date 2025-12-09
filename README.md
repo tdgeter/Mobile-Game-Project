@@ -1,3 +1,5 @@
+Kotlin build in seperate branch
+
 Screeenshots of acceptance tests here.
 
 Builds and Runs on Emulator with working Quit button:
@@ -17,4 +19,10 @@ UI does not freeze
 This app does not collect user data.
 
 Screen auto sizes depending on screen size.
+
+
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/2d01d602-c3d8-4a39-84ed-8d8662edb04b" />
+
+Screenshot of build settings
+
 
